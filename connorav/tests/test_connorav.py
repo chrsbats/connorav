@@ -77,8 +77,9 @@ class TestCorrel(unittest.TestCase):
 
 
 def plot_dist(samples):
+    from pylab import plot, show, axis, subplot, xlabel, ylabel, grid
     #
-    # Plot various projections of the samples.
+    # Plot various projections of the samples for visual testing
     #
     y = samples
     subplot(2,2,1)

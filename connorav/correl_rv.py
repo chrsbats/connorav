@@ -5,7 +5,6 @@ from scipy.linalg import eigh, cholesky
 from scipy.stats import norm, johnsonsu
 from continuous_dist import ContinuousDist
 
-#from pylab import plot, show, axis, subplot, xlabel, ylabel, grid
 
 
 # Choice of cholesky or eigenvector method.
@@ -20,9 +19,9 @@ class CorrelatedRandomVariates(object):
         #NXN correlation array
         self.dimensions = moments.shape[0]
         if self.dimensions != correlation.shape[0]:
-            raise Exception()
+            raise Exception("Error in dimensions")
         if self.dimensions != correlation.shape[1]:
-            raise Exception()
+            raise Exception("Error in dimensions")
         
         self.moments = moments
         self.correlations = correlation
