@@ -3,7 +3,7 @@
 import numpy 
 from scipy.linalg import eigh, cholesky
 from scipy.stats import norm, johnsonsu
-from continuous_dist import ContinuousDist
+from distribution import MSSKDistribution
 
 
 
@@ -12,7 +12,7 @@ from continuous_dist import ContinuousDist
 # Generate samples from three independent normally distributed random
 # variables (with mean 0 and std. dev. 1).
 
-class CorrelatedRandomVariates(object):
+class CorrelatedNonNormalRandomVariates(object):
 
     def __init__(self,moments,correlation,num_samples):
         #List of 4 moments array.
@@ -26,13 +26,12 @@ class CorrelatedRandomVariates(object):
         self.moments = moments
         self.correlations = correlation
         rv = self._uniform_correlated(self.dimensions,correlation,num_samples)
-        distributions = map(ContinuousDist,moments.tolist())
+        distributions = map(MSSKDistribution,moments.tolist())
         rv = rv.tolist()
         for d in range(self.dimensions):
             rv[d] = distributions[d].ppf(rv[d])
         self.rv = numpy.array(rv)
         
-
 
     def _normal_correlated(self,dimensions,correlation,num_samples,method='cholesky'):
 
