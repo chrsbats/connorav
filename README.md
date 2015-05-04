@@ -112,5 +112,5 @@ Lets generate some numbers.
 Authors
 =======
 
-Created by Christopher Bates (chrsbats/github).
+Created by [Christopher Bates](https://github.com/chrsbats)
 
