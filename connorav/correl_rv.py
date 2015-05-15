@@ -1,5 +1,4 @@
 
-"""Example of generating correlated normally distributed random samples."""
 import numpy 
 from scipy.linalg import eigh, cholesky
 from scipy.stats import norm, johnsonsu

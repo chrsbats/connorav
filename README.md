@@ -5,6 +5,14 @@ Fast generation of COrrelated Non-NOrmal RAndom Variates (CONNORAV)
 Specify your distributions in terms of mean, standard deviation, skew, kurtosis and a correlation matrix.   CONNORAV can generate random variates fitting these distribution descriptions in a fast and accurate manner.
 
 
+Requirements
+============
+
+python 2.7
+numpy 1.9.0
+scipy 0.14
+
+
 Motivation
 ==========
 
