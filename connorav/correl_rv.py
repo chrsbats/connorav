@@ -6,40 +6,44 @@ from distribution import MSSKDistribution
 
 
 
-# Choice of cholesky or eigenvector method.
-
-# Generate samples from three independent normally distributed random
-# variables (with mean 0 and std. dev. 1).
-
 class CorrelatedNonNormalRandomVariates(object):
 
-    def __init__(self,moments,correlation,num_samples):
+    def __init__(self,moments,correlations,num_samples, method='cholesky'):
+
         #List of 4 moments array.
         #NXN correlation array
         self.dimensions = moments.shape[0]
-        if self.dimensions != correlation.shape[0]:
+        if self.dimensions != correlations.shape[0]:
             raise Exception("Error in dimensions")
-        if self.dimensions != correlation.shape[1]:
+        if self.dimensions != correlations.shape[1]:
             raise Exception("Error in dimensions")
+
         
         self.moments = moments
-        self.correlations = correlation
-        rv = self._uniform_correlated(self.dimensions,correlation,num_samples)
-        distributions = map(MSSKDistribution,moments.tolist())
+        self.correlations = correlations
+        self.distributions = map(MSSKDistribution,moments.tolist())
+
+        self.generate(num_samples,method)
+        
+
+    def generate(self,num_samples,method='cholesky'):
+        rv = self._uniform_correlated(self.dimensions,self.correlations,num_samples,method)
         rv = rv.tolist()
         for d in range(self.dimensions):
-            rv[d] = distributions[d].ppf(rv[d])
+            rv[d] = self.distributions[d].ppf(rv[d])
         self.rv = numpy.array(rv)
+        return self.rv
         
 
     def _normal_correlated(self,dimensions,correlation,num_samples,method='cholesky'):
 
+        # Generate samples from three independent normally distributed random
+        # variables (with mean 0 and std. dev. 1).
         x = norm.rvs(size=(dimensions, num_samples))
 
         # We need a matrix `c` for  which `c*c^T = r`.  We can use, for example,
         # the Cholesky decomposition, or the we can construct `c` from the
         # eigenvectors and eigenvalues.
-
         if method == 'cholesky':
             # Compute the Cholesky decomposition.
             c = cholesky(correlation, lower=True)
