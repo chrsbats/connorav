@@ -11,6 +11,7 @@ class MSSKDistribution(object):
         self.s = std
         self.skew = skew
         self.kurt = kurt
+        self.fit()
 
     def fit(self):
 
@@ -94,7 +95,7 @@ class MSSKDistribution(object):
         ppfs = self.dist.ppf(numpy.arange(lower, upper+interval, interval))
         result = integrate.romb(ppfs, dx=interval)
         return result
-    
+
     #Visible scipy methods for distribution objects. 
     #Note that scipy uses some funky metaprogramming.  It's easier to do this than to inherit from rv_continuous.
     def rvs(self,x=None):
