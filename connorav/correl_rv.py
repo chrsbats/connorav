@@ -1,8 +1,7 @@
-
-import numpy 
+import numpy
 from scipy.linalg import eigh, cholesky
 from scipy.stats import norm, johnsonsu
-from distribution import MSSKDistribution
+from .distribution import MSSKDistribution
 
 
 
