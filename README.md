@@ -6,7 +6,6 @@ Specify your distributions in terms of mean, standard deviation, skew, kurtosis 
 
 ## Requirements
 
-- python 2.7
 - numpy 1.9.0
 - scipy 0.14
 
