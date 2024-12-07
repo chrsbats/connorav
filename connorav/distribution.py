@@ -6,35 +6,27 @@ import numpy
 NORMAL_CUTOFF = 0.01
 
 class MSSKDistribution(object):
-  
     def __init__(self, mean=None, std=None, skew=None, kurt=None):
-        if isinstance(mean,numpy.ndarray) or mean != None:
-            self.fit(mean,std,skew,kurt)
+        self.m = mean
+        self.s = std
+        self.skew = skew
+        self.kurt = kurt
+        self.fit()
 
-    def fit(self, mean, std=None, skew=None, kurt=None):
-        if std == None:
-            #Array or tuple format.
-            self.m = mean[0]
-            self.s = mean[1]
-            self.skew = mean[2]
-            self.kurt = mean[3]
-        else:
-            self.m = mean
-            self.s = std
-            self.skew = skew
-            self.kurt = kurt
+    def fit(self):
 
-        if abs(self.skew) < NORMAL_CUTOFF and abs(self.kurt) < NORMAL_CUTOFF:  
-            #It is hard to solve the johnson su curve when it is very close to normality, so just use a normal curve instead.
-            self.dist = norm(loc=self.m,scale=self.s)
+        if abs(self.skew) < NORMAL_CUTOFF and abs(self.kurt) < NORMAL_CUTOFF:
+            # It is hard to solve the johnson su curve when it is very close
+            # to normality, so just use a normal curve instead.
+            self.dist = norm(loc=self.m, scale=self.s)
             self.skew = 0.0
             self.kurt = 0.0
 
         else:
-            a,b,loc,scale = self._johnsonsu_param(self.m,self.s,self.skew,self.kurt)
+            a, b, loc, scale = self._johnsonsu_param(self.m, self.s, self.skew, self.kurt)
             self.dist = johnsonsu(a,b,loc=loc,scale=scale)
 
-    def _optimize_w(self,w1,w2,b1,b2):
+    def _optimize_w(self, w1, w2, b1, b2):
         def m_w(w):
             m = -2.0 + numpy.sqrt( 4.0 + 2.0 * ( w ** 2.0 - (b2 + 3.0) / (w ** 2.0 + 2.0 * w + 3.0)))
             return m
@@ -44,7 +36,6 @@ class MSSKDistribution(object):
             fw = (w - 1.0 - m) * ( w + 2.0 + 0.5 * m) ** 2.0
             return (fw - b1) ** 2.0
 
-        
         if abs(w1 - w2) > 0.1e-6:
             solution = minimize_scalar(f_w, method='bounded',bounds=(w1,w2))
             w = solution['x']
@@ -54,15 +45,17 @@ class MSSKDistribution(object):
             else:
                 w = w1
 
-        m = m_w(w)    
+        m = m_w(w)
 
         return w, m
 
 
     def _johnsonsu_param(self,mean,std_dev,skew,kurt):
-        #"An algorithm to determine the parameters of SU-curves in the johnson system of probabillity distributions by moment matching", HJH Tuenter, 2001
-        
-        #First convert the parameters into the moments used by Tuenter's alg. 
+        # "An algorithm to determine the parameters of SU-curves in the johnson
+        # system of probabillity distributions by moment matching",
+        # HJH Tuenter, 2001
+
+        # First convert the parameters into the moments used by Tuenter's alg.
         u2 = std_dev ** 2.0
         u3 = skew * std_dev ** 3.0
         u4 = (kurt + 3.0) * std_dev ** 4.0
@@ -73,6 +66,7 @@ class MSSKDistribution(object):
         big_d = (3.0 + b2) * (16.0 * b2 * b2 + 87.0 * b2 + 171.0) / 27
         d = -1.0 + (7.0 + 2.0 * b2 + 2.0 * numpy.sqrt(big_d)) ** (1.0 / 3.0) - (2.0 * numpy.sqrt(big_d) - 7.0 - 2.0 * b2) ** (1.0 / 3.0)
         w1 = (-1.0 + numpy.sqrt(d) + numpy.sqrt( 4 / numpy.sqrt(d) - d - 3.0)) / 2.0
+
         if (w1 - 1.0) * ((w1 + 2.0) ** 2.0) < b1:
             #no curve will fit
             raise Exception("Invalid parameters, no curve will fit")
@@ -83,7 +77,7 @@ class MSSKDistribution(object):
         if z < 0.0:
             z = 0.0
         omega = -1.0 * numpy.sign(u3) * numpy.arcsinh(numpy.sqrt(z))
-        
+
         a = omega / numpy.sqrt(numpy.log(w))
         b = 1.0 / numpy.sqrt(numpy.log(w))
 
@@ -91,17 +85,17 @@ class MSSKDistribution(object):
         if z < 0.0:
             z = 0.0
         loc = mean - numpy.sign(u3) * (std_dev / (w -1.0)) * numpy.sqrt(z)
-        
+
         scale = std_dev / (w - 1.0) * numpy.sqrt( (2.0 * mw) / ( w + 1.0))
 
-        return a,b,loc,scale
+        return a, b, loc, scale
 
     def _cvar(self,upper=0.05,samples=64,lower=0.00001):
         interval = (upper - lower) / float(samples)
         ppfs = self.dist.ppf(numpy.arange(lower, upper+interval, interval))
         result = integrate.romb(ppfs, dx=interval)
         return result
-    
+
     #Visible scipy methods for distribution objects. 
     #Note that scipy uses some funky metaprogramming.  It's easier to do this than to inherit from rv_continuous.
     def rvs(self,x=None):
