@@ -1,6 +1,8 @@
 import connorav
 import numpy as np
-from scipy impor stats
+from scipy import stats
+
+N = 10000
 
 # moments desired
 mu = 1
@@ -10,11 +12,11 @@ kurt = 6
 
 def describe(x):
     out = dict(
-        N = len(x)
-        MU = np.mean(x)
-        STD = np.std(x)
-        SKEW = stats.skew(x)
-        KURT = stats.kurtosis(x)
+        N=len(x),
+        MU=np.mean(x),
+        STD=np.std(x),
+        SKEW=stats.skew(x),
+        KURT=stats.kurtosis(x),
     )
     return out
 
@@ -27,18 +29,13 @@ for i in range(15):
     # instancing distrution
     # N = 10000
 
-# ============================================================
-# Statsmodels
-
-from statsmodels.sandbox.distributions.extras import pdf_mvsk
-import numpy as np
 from matplotlib import pyplot as plt
 
-pdf = pdf_mvsk([mu, std, skew, kurt])
-x = np.linspace(pdf(1e-4), pdf(1-1e-4))
-y = np.array([pdf(xi) for xi in x])
-
-plt.plot(x,y)
+d = connorav.MSSKDistribution(mu, std, skew, kurt)
+xs = np.linspace(d.ppf(1e-4), d.ppf(1 - 1e-4), 400)
+ys = d.pdf(xs)
+plt.plot(xs, ys)
+plt.title("MSSKDistribution PDF")
 plt.show()
 
 

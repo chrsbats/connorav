@@ -37,3 +37,4 @@ pip-log.txt
 
 # vi swap files
 *.swp
+.aider*

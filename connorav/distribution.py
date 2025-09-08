@@ -7,6 +7,16 @@ NORMAL_CUTOFF = 0.01
 
 class MSSKDistribution(object):
     def __init__(self, mean=None, std=None, skew=None, kurt=None):
+        # Allow construction from a single iterable like [mean, std, skew, kurt]
+        if std is None and skew is None and kurt is None and hasattr(mean, "__iter__"):
+            try:
+                mean, std, skew, kurt = list(mean)
+            except Exception:
+                raise TypeError(
+                    "MSSKDistribution expects either four scalars (mean, std, skew, kurt) "
+                    "or a single iterable of length 4."
+                )
+
         self.m = mean
         self.s = std
         self.skew = skew
