@@ -287,3 +287,23 @@ def test__to_latent_corr_non_square_raises():
     with pytest.raises(Exception):
         rv_generator._to_latent_corr(bad_corr, kind="pearson")
 
+
+def test___version_fallback_dev(monkeypatch):
+    import importlib
+    import importlib.metadata as ilmd
+    import connorav as mod
+
+    # Patch importlib.metadata.version to raise, then reload connorav
+    orig_version = ilmd.version
+
+    def _raise(_name):
+        raise ilmd.PackageNotFoundError
+
+    monkeypatch.setattr(ilmd, "version", _raise)
+    importlib.reload(mod)
+    assert mod.__version__ == "0.0.0+dev"
+
+    # Restore and reload to avoid side effects on other tests
+    monkeypatch.setattr(ilmd, "version", orig_version)
+    importlib.reload(mod)
+

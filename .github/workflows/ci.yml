@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.10", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,7 +18,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: pip install -U pip
       - run: pip install -e .[dev]
-      - run: pytest --cov=connorav --cov-report=term-missing
+      - run: pytest --cov=connorav --cov-report=term-missing --randomly-seed=12345 --count=5
 
   build:
     runs-on: ubuntu-latest

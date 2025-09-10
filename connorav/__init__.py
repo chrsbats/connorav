@@ -2,4 +2,6 @@ from .distribution import MSSKDistribution
 from .correl_rv import CorrelatedNonNormalRandomVariates
 
 __all__ = ["MSSKDistribution", "CorrelatedNonNormalRandomVariates"]
-__version__ = "0.2.0"
+from importlib.metadata import version, PackageNotFoundError 
+try: __version__ = version("connorav") 
+except PackageNotFoundError: __version__ = "0.0.0+dev"

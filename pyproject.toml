@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "connorav"
-dynamic = ["version"]
+version = "0.2.1"
 description = "Fast Generation of Correlated Non-Normal Random Variates"
 readme = "README.md"
 license = "MIT"
@@ -21,6 +21,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Operating System :: OS Independent",
   "Topic :: Scientific/Engineering",
   "Topic :: Software Development :: Libraries",
@@ -40,6 +41,8 @@ Issues = "https://github.com/chrsbats/connorav/issues"
 dev = [
   "pytest>=7",
   "pytest-cov>=4",
+  "pytest-randomly>=3.12",
+  "pytest-repeat>=0.9",
 ]
 
 [tool.setuptools]
@@ -47,9 +50,6 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 include = ["connorav*"]
-
-[tool.setuptools.dynamic]
-version = { attr = "connorav.__version__" }
 
 [tool.pytest.ini_options]
 addopts = "-ra"
