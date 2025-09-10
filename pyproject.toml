@@ -7,7 +7,7 @@ name = "connorav"
 version = "0.2.1"
 description = "Fast Generation of Correlated Non-Normal Random Variates"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "MIT" 
 requires-python = ">=3.8"
 authors = [
   { name="Chris Bates", email="1314008+chrsbats@users.noreply.github.com" },
