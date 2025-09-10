@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=67,<75.4", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,15 +7,14 @@ name = "connorav"
 version = "0.2.1"
 description = "Fast Generation of Correlated Non-Normal Random Variates"
 readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.8"
+license = "MIT"
+requires-python = ">=3.9"
 authors = [
   { name="Chris Bates", email="1314008+chrsbats@users.noreply.github.com" },
 ]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
